@@ -7,6 +7,22 @@ var server = express ();
 //Set the port that our server will run on.
 var port = 3000;
 
+//Configure the render engine handlebars.
+var handlebars = require ('express-handlebars');
+server.engine ('.hbs', handlebars ({
+    layoutsDir: 'templates',                //The directory of layout files
+    // partialsDir: 'templates/partials',      //The directory for partials files
+    defaultLayout: 'index',                 //The base / main template to always loads
+    extname: '.hbs'                         //The file extension to use.
+}));
+
+//Set the default directory for express to use for the handlebar templates.
+    //__dirname stores the current directory -- with two underscores
+server.set ('views', __dirname + '/templates/partials');
+
+//Set the render engine for our server.
+server.set ('view engine', '.hbs');
+
 //Launch the server app.
     //function below is called a callback function.
 server.listen (port, function (error) {
@@ -31,5 +47,13 @@ server.get ('/', function (request, response) {
 
     //NOTE: The response objct is used to send responses back to the user who made the request.
 
-    response.send ('<h1>Hello World!</h1>');
+    // response.send ('<h1>Hello World!</h1>');
+
+    //Have express render out the string / text markup response that will go to the client.
+    response.render ('home');
+});
+
+//About route
+server.get ('/about', function (request, response) {
+    response.render ('about');
 });

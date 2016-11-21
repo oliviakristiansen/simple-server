@@ -1,0 +1,17 @@
+{
+  "name": "simple-server",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Olivia Lemmelin"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

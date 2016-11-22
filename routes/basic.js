@@ -9,11 +9,12 @@ var router = express.Router ();
 router.get ('/', function (request, response) {
     //NOTE: The request object contains information about the user's request (ex. their ip address, headers, coodies, and params)
 
-    //NOTE: The response objct is used to send responses back to the user who made the request.
+    //NOTE: The response object is used to send responses back to the user who made the request.
 
-    // response.send ('<h1>Hello World!</h1>');
+    //Response.send will send to the browser what we placed in the string to make sure you got to that page.
+        // response.send ('<h1>Hello World!</h1>');
 
-    //Have express render out the string / text markup response that will go to the client.
+    //Have express render out the string / text markup response in a template that will go to the client.
     response.render ('home');
 });
 

@@ -22,7 +22,7 @@ router.post ('/save', function (request, response) {
     );
 
     //Use the 'request.body' to pull data out of any POST request object's data.
-    // console.log ('body content: ', request.body);
+    console.log ('body content: ', request.body);
 });
 
 

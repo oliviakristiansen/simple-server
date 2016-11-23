@@ -12,6 +12,27 @@ var bodyParser = require ('body-parser');
 //Set express to use the body parser to pull the data out of any POST requests from the browser.
 server.use (bodyParser.urlencoded ({ extended: true}));
 
+
+
+//Load in the express session handler.
+var session = require ('express-session');
+
+//Configure the session to be used by express.
+server.use (session ({
+    secret: 'This is my secret phrase',     //Ussed to hash / excrypt the session key.
+    resave: false,
+    saveUninitialized: true
+}));
+
+//Set a global function that will be run BEFORE any of our other routes are run.
+server.use (function (request, response, next) {
+    //Set the local data in the teample to use the user session data.
+    response.locals.user = request.session.user;
+
+    //Move on to the next route.
+    next ();
+});
+
 //Set the port that our server will run on.
 var port = 3000;
 

@@ -8,11 +8,20 @@ var router = express.Router ();
 //Define routes.
 router.get ('/login', function (request, response) {
 
+    //Check to see if the user session exists and the user is defined.
+    if (request.session.user) {
+        // Redirect user to the dashboard.
+        response.redirect ('/user/dashboard');
+    }
+    else {
+        //She the login template page.
+        response.render ('login');
+    }
     //Build your connection point first with response.send
         //response.send ('You made it to the page');
     //Then after you establish the connection to the page use response.render to pull in the
     //information from the template page you are using.
-    response.render ('login');
+    // response.render ('login');
 });
 
 router.post ('/login', function (request, response) {
@@ -31,6 +40,7 @@ router.post ('/login', function (request, response) {
         //Additional query options.
         {},
 
+        //Callback function is run as part of the .findOne.
         function (error, result) {
 
             //Check for errors.
@@ -39,19 +49,28 @@ router.post ('/login', function (request, response) {
                 console.error (error);
             }
 
-            //! means 'not' so below is 'not a result' or 'not an object'
+                //! means 'not' so below is 'not a result' or 'not an object'
             else if (!result) {
-                //Our query was run but did NOT find a matching object.
+                //The query was run but did NOT find a matching object.
                 // response.send ('Your username or password is NOT correct.');
                 response.render ('login');
             }
             else {
+                //Save the user to the session.
+                console.log ('This is the found user: ', result);
+
+                request.session.user = {
+                    username: result.username,
+                    email: result.email
+                },
+
+                console.log ('This is the session data: ', request.session);
                 //The query was run and did find a matching object.
                 // response.send ('Found the user by the name: ' + result.username);
-                response.render ('posts');
+                response.redirect ('/user/dashboard');
             }
 
-            console.log ('Here is the result: ', result);
+            // console.log ('Here is the result: ', result);
     });
 
 });
@@ -77,7 +96,7 @@ router.post ('/register', function (request, response) {
             //Check for an error.
             if (error) {
                 console.error ('***ERROR: Unable to register user.');
-                response.sned ('Server error, unable to register user.');
+                response.send ('Server error, unable to register user.');
             }
             else{
                 //Redirect to the login page.
@@ -92,6 +111,28 @@ router.post ('/register', function (request, response) {
 
 router.get ('/reset', function (request, response) {
     response.send ('You are on the reset page.');
+});
+
+router.get ('/dashboard', function (request, response) {
+    // console.log ('session: ', request.session);
+
+    if (request.session.user)
+    response.render ('dashboard', {
+        data: {
+            //Pass the session user to the template for rendering the user information.
+            user: request.session.user
+        }
+    });
+    else {
+        response.redirect ('/user/login');
+    }
+});
+
+router.get ('/logout', function (request, response) {
+    // response.send ('You are on the logout page.');
+    request.session.destroy ();
+    console.log ('Session logout: ', request.session);
+    response.redirect ('/user/login');
 });
 
 

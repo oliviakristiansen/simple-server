@@ -44,16 +44,29 @@ router.post ('/login', function (request, response) {
         function (error, result) {
 
             //Check for errors.
+                //could be something wrong with server or database.
             if (error) {
                 console.error ('***ERROR: Problem finding the user.');
                 console.error (error);
             }
 
+            //Comments below are for else if:
                 //! means 'not' so below is 'not a result' or 'not an object'
+                    //There was no error but dont have a result.
+                    //This is where we want to put the flash message.
+                        //Flash message will show up if you put in wrong information,
+                        //but when you reload the page it will dissapear. Without it,
+                        //when you put in wrong information it just reloads the page
+                        //without an error message about having wrong info when logging in.
             else if (!result) {
                 //The query was run but did NOT find a matching object.
-                // response.send ('Your username or password is NOT correct.');
-                response.render ('login');
+
+                //Create a flash message to let the user know there was a problem with
+                //their credentials.
+                request.flash ('error', 'Your username or password is not correct.');
+
+                //Redirect back to the login page.
+                response.redirect ('/user/login');
             }
             else {
                 //Save the user to the session.

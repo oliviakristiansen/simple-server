@@ -4,6 +4,10 @@ var express = require ('express');
 //Create the express server app.
 var server = express ();
 
+//Set the public folder that can be accessed by any public user.
+    //We are specifically saying to express that we only want you to serve
+    //out of the public folder.
+server.use (express.static ('public'));
 
 //Make sure the body-parser has been installed (npm install body-parser --save).
     //Load the body-parser module.
@@ -24,12 +28,26 @@ server.use (session ({
     saveUninitialized: true
 }));
 
+
+//Load in the connect-flash express middleware module. (npm install connect-flash --save)
+var flash = require ('connect-flash');
+
+//Set our server app to use the flash message object.
+server.use (flash ());
+
 //Set a global function that will be run BEFORE any of our other routes are run.
+    //This is for showing either the dashboard or the Login part of the nav bar depending
+    //on if we are logged in or not.. It will change when we login and logout.
 server.use (function (request, response, next) {
-    //Set the local data in the teample to use the user session data.
+    //Set the local data in the template to use the user session data.
     response.locals.user = request.session.user;
 
+    //Set the flash object to be set and used BEFORE running any other routes or functions.
+        //Run the flash method to create a new instance of the object.
+    response.locals.message = request.flash ();
+
     //Move on to the next route.
+        //We need this next function (below)
     next ();
 });
 
